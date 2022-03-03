@@ -1,40 +1,33 @@
-const User = require("./User");
-const List = require("./List")
-const Media = require("./Media");
-const MediaList = require("./MediaList");
-const Image = require("./Image");
+// import models
+const Product = require('./Product');
+const Category = require('./Category');
+const Tag = require('./Tag');
+const ProductTag = require('./ProductTag');
 
-// Define table relationships
-
-User.hasMany(List, {
-    foreignKey: 'user_id'
+// Products belongsTo Category
+Product.belongsTo(Category, {
+  foreignKey: 'category_id',
 });
-
-List.belongsTo(User, {
-    foreignKey: 'user_id'
+// Categories have many Products
+Category.hasMany(Product, {
+  foreignKey: 'category_id',
+  onDelete: 'Cascade',
 });
-
-User.hasMany(Media, {
-    foreignKey: 'user_id'
-});
-
-Media.belongsTo(User, {
-    foreignKey: 'user_id'
-});
-
-Media.belongsToMany(List, {through: "media_list"});
-
-// List.belongsToMany(Media, {through: "media_list"});
-List.belongsToMany(Media, {through: "media_list"});
-
-Media.hasOne(Image, {
-    foreignKey: "medium_id"
-})
-
-Image.belongsTo(Media, {
-    foreignKey: "medium_id"
-})
-
-
-
-module.exports = {User, List, Media, MediaList, Image}; 
+// Products belongToMany Tags (through ProductTag)
+Product.belongsToMany(Tag, {
+  through: ProductTag,
+  foreignKey: 'product_id'
+  }
+);
+// Tags belongToMany Products (through ProductTag)
+Tag.belongsToMany(Product, {
+  through: ProductTag,
+  foreignKey: 'tag_id'
+  }
+);
+module.exports = {
+  Product,
+  Category,
+  Tag,
+  ProductTag,
+};
